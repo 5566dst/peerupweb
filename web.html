@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PeerUp.cn</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, #00449e, #007acc); /* 蓝色渐变背景 */
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            padding: 200px;
+            border-radius: 100px;
+            background: rgba(0, 0, 0, 0.6); /* 半透明黑色容器 */
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1s ease-in-out forwards;
+            width: 400px; /* 固定宽度，适应1366×768分辨率 */
+        }
+        .domain {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        .info {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .contact {
+            font-size: 1.5em;
+            color: #00ff80;
+            margin-top: 20px;
+        }
+        a {
+            text-decoration: none;
+            color: #00ff80;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* 动画定义 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                color: #ffffff;
+            }
+            50% {
+                transform: scale(1.1);
+                color: #00ff80;
+            }
+            100% {
+                transform: scale(1);
+                color: #ffffff;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="domain">peerup.cn</div>
+        <div class="info">此域名出售</div>
+		<div class="info">峥研软件：<a href="javascript:void(0);">优先购买</a></div>
+                <div class="info">阿里云严选：<a href="javascript:void(0);">阿里云严选</a></div>
+		<div class="info">peerup.com：<a href="javascript:void(0);">中国域名</a></div>
+    </div>
+</body>
+</html>
