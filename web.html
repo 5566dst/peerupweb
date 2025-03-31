@@ -1,56 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>peerup - All-in-One的科研智能工作空间 | 峥研 </title>
+    <title>PeerUp.cn 精品域名出售 | 科研协同领域优质数字资产</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(45deg, #00449e, #007acc); /* 蓝色渐变背景 */
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-        .container {
-            text-align: center;
-            padding: 200px;
-            border-radius: 100px;
-            background: rgba(0, 0, 0, 0.6); /* 半透明黑色容器 */
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            animation: fadeIn 1s ease-in-out forwards;
-            width: 400px; /* 固定宽度，适应1366×768分辨率 */
-        }
-        .domain {
-            font-size: 3em;
-            font-weight: bold;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-        }
-        .info {
-            font-size: 1.2em;
-            margin-bottom: 20px;
-        }
-        .contact {
-            font-size: 1.5em;
-            color: #00ff80;
-            margin-top: 20px;
-        }
-        a {
-            text-decoration: none;
-            color: #00ff80;
-        }
-        a:hover {
-            text-decoration: underline;
+        :root {
+            --primary: #2A5CAA;
+            --secondary: #3C3C3D;
+            --accent: #FFD700;
+            --glass: rgba(255, 255, 255, 0.15);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* 动画定义 */
-        @keyframes fadeIn {
+        @font-face {
+            font-family: 'Inter';
+            src: local('Inter'), local('Inter-Regular');
+            font-weight: 400;
+            font-display: swap;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            color: var(--secondary);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 玻璃拟态效果 */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: var(--transition);
+        }
+
+        /* 动画效果 */
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(20px);
@@ -60,29 +59,323 @@
                 transform: translateY(0);
             }
         }
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                color: #ffffff;
+
+        .animate-card {
+            opacity: 0;
+            animation: fadeInUp 0.6s forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+
+        /* 英雄区域 */
+        .hero {
+            height: 70vh;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(42, 92, 170, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            padding: 32px;
+            transition: var(--transition);
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .card ul {
+            padding-left: 20px;
+        }
+
+        .card li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            list-style-type: none;
+            padding-left: 28px;
+        }
+
+        .card li:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* 交易信息区域 */
+        .transaction-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .transaction-card {
+            background: linear-gradient(135deg, #f9fafc 0%, #f0f4f8 100%);
+            border-radius: 16px;
+            padding: 48px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .transaction-card h3 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 2.5rem;
+            font-size: 2rem;
+        }
+
+        /* 按钮样式 */
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+            padding: 12px 32px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 500;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(42, 92, 170, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #1e4b8e;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(42, 92, 170, 0.4);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
             }
-            50% {
-                transform: scale(1.1);
-                color: #00ff80;
+            
+            .hero-tag {
+                font-size: 0.9rem;
             }
-            100% {
-                transform: scale(1);
-                color: #ffffff;
+            
+            .card {
+                padding: 24px;
             }
+            
+            .transaction-card {
+                padding: 32px;
+            }
+        }
+
+        /* 页脚 */
+        footer {
+            background: var(--secondary);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* 网格布局 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 60px 0;
+        }
+
+        /* 分割线 */
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(0,0,0,0.1), transparent);
+            margin: 60px 0;
         }
     </style>
 </head>
 <body>
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="hero-content animate-card">
+            <h1>PEERUP.CN -峥研软件</h1>
+            <p class="hero-tag">全球科技领域黄金域名待售</p>
+        </div>
+    </section>
+
+    <!-- 核心价值模块 -->
     <div class="container">
-        <div class="domain">peerup.cn</div>
-        <div class="info">此域名出售</div>
-		<div class="info">峥研软件：<a href="javascript:void(0);">优先购买</a></div>
-                <div class="info">阿里云严选：<a href="javascript:void(0);">阿里云严选</a></div>
-		<div class="info">peerup.com：<a href="javascript:void(0);">中国域名</a></div>
+        <div class="grid">
+            <!-- 品牌价值 -->
+            <div class="card animate-card delay-1">
+                <div class="card-icon">🏆</div>
+                <h3>品牌优势</h3>
+                <ul>
+                    <li>行业精准定位："PeerUp"直指科研协同领域</li>
+                    <li>全球通用性：英文词汇无文化壁垒</li>
+                    <li>记忆成本低：7字符短域名</li>
+                </ul>
+            </div>
+            
+            <!-- 技术参数 -->
+            <div class="card animate-card delay-2">
+                <div class="card-icon">📈</div>
+                <h3>技术参数</h3>
+                <ul>
+                    <li>注册时间：2020年（5年历史）</li>
+                    <li>DNS解析：支持多线路智能解析</li>
+                    <li>安全认证：DNSSEC已部署</li>
+                </ul>
+            </div>
+
+            <!-- 应用场景 -->
+            <div class="card animate-card delay-3">
+                <div class="card-icon">🚀</div>
+                <h3>应用方向</h3>
+                <ul>
+                    <li>科研协作SaaS平台</li>
+                    <li>学术资源共享社区</li>
+                    <li>科技创投品牌门户</li>
+                </ul>
+            </div>
+        </div>
     </div>
+
+    <!-- 交易信息模块 -->
+    <section class="transaction-section">
+        <div class="container">
+            <div class="transaction-card animate-card">
+                <h3>交易信息公示</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px;">
+                    <div>
+                        <h4 style="color: var(--primary); margin-bottom: 1.5rem;">交易方式</h4>
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            <li style="margin-bottom: 1rem; display: flex; align-items: flex-start;">
+                                <span style="color: var(--accent); margin-right: 10px;">•</span>
+                                <span>平台一口价</span>
+                            </li>
+                            <li style="margin-bottom: 1rem; display: flex; align-items: flex-start;">
+                                <span style="color: var(--accent); margin-right: 10px;">•</span>
+                                <span>中介担保交易</span>
+                            </li>
+                            <li style="display: flex; align-items: flex-start;">
+                                <span style="color: var(--accent); margin-right: 10px;">•</span>
+                                <span>定向议价</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--primary); margin-bottom: 1.5rem;">推荐平台</h4>
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            <li style="margin-bottom: 1rem;">
+                                <a href="https://www.juming.com" target="_blank" style="color: var(--primary); text-decoration: none; display: flex; align-items: center;">
+                                    <span style="color: var(--accent); margin-right: 10px;">→</span>
+                                    <span>聚名网</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://mi.aliyun.com" target="_blank" style="color: var(--primary); text-decoration: none; display: flex; align-items: center;">
+                                    <span style="color: var(--accent); margin-right: 10px;">→</span>
+                                    <span>阿里云域名交易</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 3rem;">
+                    <button class="btn-primary">获取交易协议</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <p>© <span id="current-year"></span> PeerUp.cn 域名出售 </p>
+        </div>
+    </footer>
+
+    <script>
+        // 设置当前年份
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        // 滚动动画触发
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateElements = document.querySelectorAll('.animate-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            animateElements.forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
 </body>
 </html>
