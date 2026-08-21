@@ -148,7 +148,7 @@
                     <span class="live-dot"></span> 实时更新
                 </div>
                 <div class="stat-label">累计访问量</div>
-                <div class="stat-value" id="totalVisits">--</div>
+                <div class="stat-value" id="totalVisits">0</div>
             </div>
             
             <div class="stat-card">
@@ -156,7 +156,7 @@
                     <span class="live-dot"></span> 实时更新
                 </div>
                 <div class="stat-label">今日访问量</div>
-                <div class="stat-value" id="todayVisits">--</div>
+                <div class="stat-value" id="todayVisits">0</div>
             </div>
         </div>
         
@@ -178,14 +178,11 @@
     </div>
 
     <script>
-        // 配置你的专属命名空间，防止与其他人的数据混淆
-        const namespace = 'peerup-cn-domain';
-        
         // 获取当前日期作为 Key，实现"每日清零"的今日访问统计
         const today = new Date();
         const dateStr = today.toISOString().split('T')[0]; // 格式: 2026-08-21
         const todayKey = `visits-${dateStr}`;
-        const totalKey = `visits-total`;
+        const totalKey = 'visits-total';
 
         // 防刷机制：使用 localStorage 记录本地访问时间，同一浏览器 10 秒内刷新不重复计数
         const lastVisit = localStorage.getItem('peerup_last_visit');
@@ -196,55 +193,43 @@
             shouldCount = false;
         }
 
-        // 构造 API URL (up 代表访问量 +1 并返回当前值)
-        const todayUrl = `https://api.counterapi.dev/v1/${namespace}/${todayKey}/up`;
-        const totalUrl = `https://api.counterapi.dev/v1/${namespace}/${totalKey}/up`;
+        // 从 localStorage 获取数据
+        let totalVisits = parseInt(localStorage.getItem(totalKey)) || 0;
+        let todayVisits = parseInt(localStorage.getItem(todayKey)) || 0;
 
-        // 如果不需要计数（10秒内刷新过），则只获取数据不增加
-        const todayReqUrl = shouldCount ? todayUrl : `https://api.counterapi.dev/v1/${namespace}/${todayKey}`;
-        const totalReqUrl = shouldCount ? totalUrl : `https://api.counterapi.dev/v1/${namespace}/${totalKey}`;
-
-        // 初始化数据
-        let totalVisits = 0;
-        let todayVisits = 0;
-        
-        // 更新访问量显示的函数
-        function updateVisits() {
-            Promise.all([
-                fetch(todayReqUrl).then(res => res.json()),
-                fetch(totalReqUrl).then(res => res.json())
-            ])
-            .then(([todayRes, totalRes]) => {
-                // 更新页面显示数据
-                if (todayRes && todayRes.count !== undefined) {
-                    todayVisits = todayRes.count;
-                    document.getElementById('todayVisits').textContent = todayVisits;
-                } else {
-                    document.getElementById('todayVisits').textContent = '0';
-                }
-
-                if (totalRes && totalRes.count !== undefined) {
-                    totalVisits = totalRes.count;
-                    document.getElementById('totalVisits').textContent = totalVisits.toLocaleString();
-                } else {
-                    document.getElementById('totalVisits').textContent = '0';
-                }
-            })
-            .catch(err => {
-                // 如果 API 宕机或网络错误，显示 0 或占位符，不影响页面美观
-                document.getElementById('todayVisits').textContent = '0';
-                document.getElementById('totalVisits').textContent = '0';
-                console.warn('流量统计服务暂时无法连接，不影响页面浏览。');
-            });
+        // 更新访问量显示
+        function updateDisplay() {
+            document.getElementById('totalVisits').textContent = totalVisits;
+            document.getElementById('todayVisits').textContent = todayVisits;
         }
+
+        // 初始化显示
+        updateDisplay();
+
+        // 更新访问量
+        function updateVisits() {
+            if (shouldCount) {
+                // 增加访问量
+                todayVisits++;
+                totalVisits++;
+                
+                // 保存到 localStorage
+                localStorage.setItem(todayKey, todayVisits);
+                localStorage.setItem(totalKey, totalVisits);
+                
+                // 更新显示
+                updateDisplay();
+                
+                // 记录本次访问时间
+                localStorage.setItem('peerup_last_visit', now.toString());
+            }
+        }
+
+        // 页面加载时更新一次
+        updateVisits();
         
-        // 页面加载完成后初始化
-        window.addEventListener('DOMContentLoaded', function() {
-            // 页面加载时立即更新一次
-            updateVisits();
-            // 每10秒更新一次数据
-            setInterval(updateVisits, 10000);
-        });
+        // 每10秒自动更新一次数据
+        setInterval(updateVisits, 10000);
     </script>
 </body>
 </html>
