@@ -184,52 +184,35 @@
         const todayKey = `visits-${dateStr}`;
         const totalKey = 'visits-total';
 
-        // 防刷机制：使用 localStorage 记录本地访问时间，同一浏览器 10 秒内刷新不重复计数
-        const lastVisit = localStorage.getItem('peerup_last_visit');
-        const now = Date.now();
-        let shouldCount = true;
-
-        if (lastVisit && (now - parseInt(lastVisit)) < 10000) { // 10000毫秒 = 10秒
-            shouldCount = false;
-        }
-
-        // 从 localStorage 获取数据
+        // 从 localStorage 获取历史数据，如果没有则默认为 0
         let totalVisits = parseInt(localStorage.getItem(totalKey)) || 0;
         let todayVisits = parseInt(localStorage.getItem(todayKey)) || 0;
 
-        // 更新访问量显示
+        // 更新页面显示的函数
         function updateDisplay() {
-            document.getElementById('totalVisits').textContent = totalVisits;
-            document.getElementById('todayVisits').textContent = todayVisits;
+            document.getElementById('totalVisits').textContent = totalVisits.toLocaleString();
+            document.getElementById('todayVisits').textContent = todayVisits.toLocaleString();
         }
 
-        // 初始化显示
-        updateDisplay();
-
-        // 更新访问量
-        function updateVisits() {
-            if (shouldCount) {
-                // 增加访问量
-                todayVisits++;
-                totalVisits++;
-                
-                // 保存到 localStorage
-                localStorage.setItem(todayKey, todayVisits);
-                localStorage.setItem(totalKey, totalVisits);
-                
-                // 更新显示
-                updateDisplay();
-                
-                // 记录本次访问时间
-                localStorage.setItem('peerup_last_visit', now.toString());
-            }
+        // 增加访问量的函数
+        function addVisits() {
+            // 累计访问量和今日访问量均 +1
+            todayVisits++;
+            totalVisits++;
+            
+            // 将最新数据保存回 localStorage
+            localStorage.setItem(todayKey, todayVisits);
+            localStorage.setItem(totalKey, totalVisits);
+            
+            // 更新页面显示
+            updateDisplay();
         }
 
-        // 页面加载时更新一次
-        updateVisits();
+        // 页面加载时立即执行一次：刷新即 +1
+        addVisits();
         
-        // 每10秒自动更新一次数据
-        setInterval(updateVisits, 10000);
+        // 每10秒自动更新一次数据，让数字保持动态跳动效果
+        setInterval(addVisits, 10000);
     </script>
 </body>
 </html>
