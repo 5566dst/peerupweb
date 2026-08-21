@@ -3,216 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>peerup.cn域名出售</title>
+    <title>peerup.cn 域名展示页</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
         }
         
         body {
-            background-color: #f5f5f5;
+            background-color: #f5f7fa;
             color: #333;
-        }
-        
-        .container {
-            display: flex;
-            max-width: 1200px;
-            margin: 0 auto;
             padding: 20px;
         }
         
-        .left-sidebar, .right-sidebar {
-            width: 200px;
-            padding: 15px;
-        }
-        
-        .main-content {
-            flex: 1;
-            margin: 0 20px;
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
             background-color: #fff;
+            border-radius: 12px;
             padding: 30px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .ad-space {
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #ffeb3b; /* 黄色背景 */
-            border: 2px dashed #ff9800;
-            margin-bottom: 20px;
-            color: #ff5722;
-            font-weight: bold;
-            text-align: center;
-            animation: blink 2s infinite; /* 闪动效果 */
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; background-color: #ffc107; } /* 闪动时颜色稍变 */
-            100% { opacity: 1; }
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         }
         
         header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px 0;
             text-align: center;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
             margin-bottom: 30px;
         }
         
         h1 {
+            color: #2c3e50;
+            font-size: 2.2rem;
             margin-bottom: 10px;
         }
         
-        .domain-list {
-            margin-top: 30px;
-        }
-        
-        .domain-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            align-items: center;
-        }
-        
-        .domain-item:hover {
-            background-color: #f9f9f9;
-        }
-        
         .domain-name {
+            font-size: 3rem;
             font-weight: bold;
             color: #2980b9;
-            font-size: 18px;
+            margin: 20px 0;
+            text-align: center;
         }
         
-        .domain-price {
-            color: #e74c3c;
+        .stats-box {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            flex: 1;
+            min-width: 200px;
+            background-color: #f8fafc;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
             font-weight: bold;
+            color: #1e293b;
+            margin: 10px 0;
         }
         
-        .contact-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        .stat-label {
+            color: #64748b;
+            font-size: 1rem;
+            font-weight: 600;
         }
         
-        .contact-btn:hover {
-            background-color: #2980b9;
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            background-color: #fef3c7;
+            color: #92400e;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #f59e0b;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+        
+        .simple-chart {
+            width: 100%;
+            height: 180px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 100%;
+            padding: 10px;
+        }
+        
+        .bar {
+            width: 3%;
+            background-color: #3b82f6;
+            border-radius: 4px 4px 0 0;
+            transition: height 0.5s ease;
+        }
+        
+        .info-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            line-height: 1.7;
         }
         
         footer {
             text-align: center;
-            padding: 20px;
-            margin-top: 30px;
-            background-color: #2c3e50;
-            color: white;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .disclaimer {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fffbeb;
+            border-radius: 6px;
+            color: #92400e;
+            font-size: 0.85rem;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>-域名出售</h1>
-        <p>本域名已托管阿里云严选 · 安全交易保障</p>
-    </header>
-    
     <div class="container">
-        <!-- 左侧广告边栏 -->
-        <div class="left-sidebar">
-            <div class="ad-space">
-                <div>
-                    <strong>左侧广告位招租</strong><br><br>
-                    黄金位置，高曝光率<br>
-                    联系QQ:12345678<br>
+        <header>
+            <h1>peerup.cn 域名展示</h1>
+            <p>该域名正在寻求意向受让方，欢迎垂询</p>
+        </header>
+        
+        <div class="domain-name">peerup.cn</div>
+        
+        <div class="stats-box">
+            <div class="stat-card">
+                <div class="live-indicator">
+                    <span class="live-dot"></span> 实时更新
                 </div>
+                <div class="stat-label">累计访问量</div>
+                <div class="stat-value" id="totalVisits">1247</div>
             </div>
-            <div class="ad-space">
-                <div>
-                    <strong>左侧广告位招租</strong><br><br>
-                    每日千次展示<br>
-                    优惠价格火热招商中<br>
-                    联系QQ:547680334
+            
+            <div class="stat-card">
+                <div class="live-indicator">
+                    <span class="live-dot"></span> 实时更新
                 </div>
+                <div class="stat-label">今日访问量</div>
+                <div class="stat-value" id="todayVisits">86</div>
             </div>
         </div>
         
-        <!-- 主要内容区域 -->
-        <div class="main-content">
-            <h2>精品域名出售</h2>
-            <p>以下是我们精选的优质域名，如有意向请联系我们洽谈购买事宜。</p>
-            
-            <div class="domain-list">
-                <div class="domain-item">
-                    <span class="domain-name">peerup.cn</span>
-                    <span class="domain-price">阿里严选</span>
-                    <button class="contact-btn">联系购买</button>
-                </div>
-                <div class="domain-item">
-                    <span class="domain-name">peerup.cn</span>
-                    <span class="domain-price">阿里严选</span>
-                    <button class="contact-btn">联系购买</button>
-                </div>
-                <div class="domain-item">
-                    <span class="domain-name">peerup.cn</span>
-                    <span class="domain-price">阿里严选</span>
-                    <button class="contact-btn">联系购买</button>
-                </div>
-                <div class="domain-item">
-                    <span class="domain-name">peerup.cn</span>
-                    <span class="domain-price">阿里严选</span>
-                    <button class="contact-btn">联系购买</button>
-                </div>
-                <div class="domain-item">
-                    <span class="domain-name">peerup.cn</span>
-                    <span class="domain-price">阿里严选</span>
-                    <button class="contact-btn">联系购买</button>
-                </div>
-            </div>
-            
-            <div style="margin-top: 40px;">
-                <h3>域名购买须知</h3>
-                <p>1. 所有价格均为参考价，具体价格可商议</p>
-                <p>2. 交易通过正规平台进行，保障双方权益</p>
-                <p>3. 域名过户手续由我们全程协助办理</p>
-                <p>4. 更多域名资源请直接联系我们咨询</p>
+        <h3 style="margin-top: 30px; color: #2c3e50;">今日访问趋势</h3>
+        <div class="simple-chart">
+            <div class="chart-bars" id="chartBars">
+                <!-- 柱状图将通过JS动态生成 -->
             </div>
         </div>
         
-        <!-- 右侧广告边栏 -->
-        <div class="right-sidebar">
-            <div class="ad-space">
-                <div>
-                    <strong>右侧广告位招租</strong><br><br>
-                    黄金位置，高点击率<br>
-                    联系QQ:547680334<br>
-                </div>
-            </div>
-            <div class="ad-space">
-                <div>
-                    <strong>右侧广告位招租</strong><br><br>
-                    精准投放，效果显著<br>
-                    限时特惠，先到先得<br>
-                    联系QQ:547680334
-                </div>
-            </div>
+        <div class="info-section">
+            <h3>域名信息</h3>
+            <p>• 状态：正常可转移</p>
+            <p>• 后缀：.cn 中国顶级域名</p>
+            <p>• 特点：简短易记，品牌关联性强</p>
+            <p>• 交易：通过正规域名平台安全交易</p>
         </div>
+        
+        <div class="disclaimer">
+            <strong>免责声明：</strong>本页面仅为域名信息展示，所有数据为模拟演示，仅供参考。所有交易请通过正规域名交易平台进行，保障双方权益。
+        </div>
+        
+        <footer>
+            <p>© 2026 peerup.cn 域名展示页</p>
+        </footer>
     </div>
-    
-    <footer>
-        <p>© 2023 优质域名交易平台 版权所有</p>
-        <p>联系方式: 547680334@qq.com | QQ: 547680334 </p>
-    </footer>
+
+    <script>
+        // 配置你的专属命名空间，防止与其他人的数据混淆
+        const namespace = 'peerup-cn-domain';
+        
+        // 获取当前日期作为 Key，实现"每日清零"的今日访问统计
+        const today = new Date();
+        const dateStr = today.toISOString().split('T')[0]; // 格式: 2026-08-21
+        const todayKey = `visits-${dateStr}`;
+        const totalKey = `visits-total`;
+
+        // 防刷机制：使用 localStorage 记录本地访问时间，同一浏览器 10 分钟内刷新不重复计数
+        const lastVisit = localStorage.getItem('peerup_last_visit');
+        const now = Date.now();
+        let shouldCount = true;
+
+        if (lastVisit && (now - parseInt(lastVisit)) < 600000) { // 600000毫米 = 10分钟
+            shouldCount = false;
+        }
+
+        // 构造 API URL (up 代表访问量 +1 并返回当前值)
+        const todayUrl = `https://api.counterapi.dev/v1/${namespace}/${todayKey}/up`;
+        const totalUrl = `https://api.counterapi.dev/v1/${namespace}/${totalKey}/up`;
+
+        // 如果不需要计数（10分钟内刷新过），则只获取数据不增加
+        const todayReqUrl = shouldCount ? todayUrl : `https://api.counterapi.dev/v1/${namespace}/${todayKey}`;
+        const totalReqUrl = shouldCount ? totalUrl : `https://api.counterapi.dev/v1/${namespace}/${totalKey}`;
+
+        // 初始化数据
+        let totalVisits = 0;
+        let todayVisits = 0;
+        const barsCount = 24; // 24小时数据
+        const bars = [];
+        
+        // 初始化柱状图
+        function initChart() {
+            const chartContainer = document.getElementById('chartBars');
+            
+            for (let i = 0; i < barsCount; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                // 随机初始高度，范围10-90%
+                const initialHeight = Math.floor(Math.random() * 80) + 10;
+                bar.style.height = initialHeight + '%';
+                bars.push(bar);
+                chartContainer.appendChild(bar);
+            }
+        }
+        
+        // 更新访问量显示的函数
+        function updateVisits() {
+            Promise.all([
+                fetch(todayReqUrl).then(res => res.json()),
+                fetch(totalReqUrl).then(res => res.json())
+            ])
+            .then(([todayRes, totalRes]) => {
+                // 更新页面显示数据
+                if (todayRes && todayRes.count !== undefined) {
+                    todayVisits = todayRes.count;
+                    document.getElementById('todayVisits').textContent = todayVisits;
+                } else {
+                    document.getElementById('todayVisits').textContent = '0';
+                }
+
+                if (totalRes && totalRes.count !== undefined) {
+                    totalVisits = totalRes.count;
+                    document.getElementById('totalVisits').textContent = totalVisits.toLocaleString();
+                } else {
+                    document.getElementById('totalVisits').textContent = '0';
+                }
+
+                // 更新当前小时对应的柱状图高度
+                const currentHour = new Date().getHours();
+                if (currentHour < barsCount) {
+                    const newHeight = Math.floor(Math.random() * 70) + 20;
+                    bars[currentHour].style.height = newHeight + '%';
+                }
+            })
+            .catch(err => {
+                // 如果 API 宕机或网络错误，显示 0 或占位符，不影响页面美观
+                document.getElementById('todayVisits').textContent = '0';
+                document.getElementById('totalVisits').textContent = '0';
+                console.warn('流量统计服务暂时无法连接，不影响页面浏览。');
+            });
+        }
+        
+        // 页面加载完成后初始化
+        window.addEventListener('DOMContentLoaded', function() {
+            initChart();
+            // 页面加载时立即更新一次
+            updateVisits();
+            // 每3秒更新一次数据，模拟实时效果
+            setInterval(updateVisits, 3000);
+        });
+    </script>
 </body>
 </html>
