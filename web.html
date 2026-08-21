@@ -106,32 +106,6 @@
             100% { opacity: 1; }
         }
         
-        .simple-chart {
-            width: 100%;
-            height: 180px;
-            background-color: #f8fafc;
-            border-radius: 8px;
-            margin: 20px 0;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .chart-bars {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            height: 100%;
-            padding: 10px;
-        }
-        
-        .bar {
-            width: 3%;
-            background-color: #3b82f6;
-            border-radius: 4px 4px 0 0;
-            transition: height 0.5s ease;
-        }
-        
         .info-section {
             margin-top: 30px;
             padding: 20px;
@@ -174,7 +148,7 @@
                     <span class="live-dot"></span> 实时更新
                 </div>
                 <div class="stat-label">累计访问量</div>
-                <div class="stat-value" id="totalVisits">1247</div>
+                <div class="stat-value" id="totalVisits">--</div>
             </div>
             
             <div class="stat-card">
@@ -182,14 +156,7 @@
                     <span class="live-dot"></span> 实时更新
                 </div>
                 <div class="stat-label">今日访问量</div>
-                <div class="stat-value" id="todayVisits">86</div>
-            </div>
-        </div>
-        
-        <h3 style="margin-top: 30px; color: #2c3e50;">今日访问趋势</h3>
-        <div class="simple-chart">
-            <div class="chart-bars" id="chartBars">
-                <!-- 柱状图将通过JS动态生成 -->
+                <div class="stat-value" id="todayVisits">--</div>
             </div>
         </div>
         
@@ -220,12 +187,12 @@
         const todayKey = `visits-${dateStr}`;
         const totalKey = `visits-total`;
 
-        // 防刷机制：使用 localStorage 记录本地访问时间，同一浏览器 10 分钟内刷新不重复计数
+        // 防刷机制：使用 localStorage 记录本地访问时间，同一浏览器 10 秒内刷新不重复计数
         const lastVisit = localStorage.getItem('peerup_last_visit');
         const now = Date.now();
         let shouldCount = true;
 
-        if (lastVisit && (now - parseInt(lastVisit)) < 600000) { // 600000毫米 = 10分钟
+        if (lastVisit && (now - parseInt(lastVisit)) < 10000) { // 10000毫秒 = 10秒
             shouldCount = false;
         }
 
@@ -233,30 +200,13 @@
         const todayUrl = `https://api.counterapi.dev/v1/${namespace}/${todayKey}/up`;
         const totalUrl = `https://api.counterapi.dev/v1/${namespace}/${totalKey}/up`;
 
-        // 如果不需要计数（10分钟内刷新过），则只获取数据不增加
+        // 如果不需要计数（10秒内刷新过），则只获取数据不增加
         const todayReqUrl = shouldCount ? todayUrl : `https://api.counterapi.dev/v1/${namespace}/${todayKey}`;
         const totalReqUrl = shouldCount ? totalUrl : `https://api.counterapi.dev/v1/${namespace}/${totalKey}`;
 
         // 初始化数据
         let totalVisits = 0;
         let todayVisits = 0;
-        const barsCount = 24; // 24小时数据
-        const bars = [];
-        
-        // 初始化柱状图
-        function initChart() {
-            const chartContainer = document.getElementById('chartBars');
-            
-            for (let i = 0; i < barsCount; i++) {
-                const bar = document.createElement('div');
-                bar.className = 'bar';
-                // 随机初始高度，范围10-90%
-                const initialHeight = Math.floor(Math.random() * 80) + 10;
-                bar.style.height = initialHeight + '%';
-                bars.push(bar);
-                chartContainer.appendChild(bar);
-            }
-        }
         
         // 更新访问量显示的函数
         function updateVisits() {
@@ -279,13 +229,6 @@
                 } else {
                     document.getElementById('totalVisits').textContent = '0';
                 }
-
-                // 更新当前小时对应的柱状图高度
-                const currentHour = new Date().getHours();
-                if (currentHour < barsCount) {
-                    const newHeight = Math.floor(Math.random() * 70) + 20;
-                    bars[currentHour].style.height = newHeight + '%';
-                }
             })
             .catch(err => {
                 // 如果 API 宕机或网络错误，显示 0 或占位符，不影响页面美观
@@ -297,11 +240,10 @@
         
         // 页面加载完成后初始化
         window.addEventListener('DOMContentLoaded', function() {
-            initChart();
             // 页面加载时立即更新一次
             updateVisits();
-            // 每3秒更新一次数据，模拟实时效果
-            setInterval(updateVisits, 3000);
+            // 每10秒更新一次数据
+            setInterval(updateVisits, 10000);
         });
     </script>
 </body>
