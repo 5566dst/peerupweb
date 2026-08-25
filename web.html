@@ -62,9 +62,8 @@
     </div>
 
 <script>
-// ===== 配置：替换为你自己在 https://countapi.mileshilliard.com 创建的命名空间 key =====
-// 创建方法见下方注释。若服务不可用，自动降级为 localStorage 本地计数。
-const NAMESPACE = "peerup-cn";   // 可自定义，建议保持唯一
+
+const NAMESPACE = "peerup-cn";   
 const KEY_TOTAL  = "total-visits";
 
 const todayStr = new Date().toISOString().split('T')[0];
@@ -87,12 +86,12 @@ function updateDisplay() {
 }
 
 async function hitCountAPI() {
-    // countapi: GET 自增并返回当前值
+   
     const url = `https://countapi.mileshilliard.com/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY_TOTAL)}`;
     const res = await fetch(url, { method: "GET", cache: "no-store" });
     if (!res.ok) throw new Error("countapi unavailable");
     const data = await res.json();
-    // 不同实现返回字段可能为 value / count，兼容处理
+
     const val = (data && (data.value !== undefined ? data.value : data.count)) || null;
     if (val === null) throw new Error("bad response");
     return parseInt(val);
@@ -120,7 +119,7 @@ function addVisit() {
     updateDisplay();
 }
 
-// 今日标签始终按本地会话说明
+
 setTag("todayTag", "dot-yellow", "本机会话计数（按日）", "src-local");
 
 updateDisplay();
