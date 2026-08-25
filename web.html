@@ -7,9 +7,11 @@
   <style>
     :root {
       --green: #00ff7a;
-      --bg: #0a0f0c;
+      --green-dim: rgba(0, 255, 122, 0.2);
+      --bg: #050505;
       --glitch: #ff0040;
       --cyan: #00e0ff;
+      --glass: rgba(10, 15, 12, 0.65);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -19,204 +21,265 @@
       overflow: hidden;
       min-height: 100vh;
       cursor: crosshair;
+      perspective: 1000px; /* 3D 透视 */
     }
 
     /* ========== 背景层 ========== */
-    canvas#matrix { position: fixed; inset: 0; z-index: -3; opacity: 0.25; }
+    canvas#matrix { position: fixed; inset: 0; z-index: -3; opacity: 0.2; }
     canvas#particles { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+    
+    /* 透视网格背景，增加空间感 */
+    .grid-floor {
+      position: fixed;
+      bottom: -50%;
+      left: -50%;
+      width: 200%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(0, 255, 122, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 122, 0.1) 1px, transparent 1px);
+      background-size: 40px 40px;
+      transform: rotateX(60deg);
+      z-index: -2;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40%);
+      animation: gridMove 20s linear infinite;
+    }
+    @keyframes gridMove { 0% { transform: rotateX(60deg) translateY(0); } 100% { transform: rotateX(60deg) translateY(40px); } }
+
     .scanline {
       position: fixed; inset: 0;
-      background: linear-gradient(transparent 50%, rgba(0,0,0,0.2) 50%);
+      background: linear-gradient(transparent 50%, rgba(0,0,0,0.3) 50%);
       background-size: 100% 4px;
       z-index: 4;
       pointer-events: none;
-      animation: scan 10s linear infinite;
+      animation: scan 6s linear infinite;
     }
     .crt {
       position: fixed; inset: 0;
-      box-shadow: inset 0 0 120px rgba(0,255,122,0.05);
-      z-index: 3;
+      box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+      z-index: 10;
       pointer-events: none;
     }
 
-    /* ========== 雷达 ========== */
+    /* ========== 雷达 (升级为 Canvas 容器) ========== */
     .radar {
       position: fixed;
-      top: 20px; right: 20px;
-      width: 80px; height: 80px;
-      border: 1px solid rgba(0,255,122,0.3);
+      top: 30px; right: 30px;
+      width: 100px; height: 100px;
+      border: 1px solid rgba(0,255,122,0.5);
       border-radius: 50%;
       z-index: 5;
+      background: radial-gradient(circle, rgba(0,255,122,0.1) 0%, transparent 70%);
+      box-shadow: 0 0 15px rgba(0,255,122,0.2);
     }
-    .radar::before {
-      content: "";
-      position: absolute;
-      inset: 5px;
-      border-radius: 50%;
+    .radar-grid {
+      position: absolute; inset: 0; border-radius: 50%;
       border: 1px dashed rgba(0,255,122,0.2);
     }
-    .radar::after {
-      content: "";
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 50%; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--green));
-      transform-origin: left center;
-      animation: radar 3s linear infinite;
+    .radar-grid::after {
+      content:''; position: absolute; top:50%; left:0; width:100%; height:1px; background: rgba(0,255,122,0.2);
+    }
+    .radar-grid::before {
+      content:''; position: absolute; left:50%; top:0; width:1px; height:100%; background: rgba(0,255,122,0.2);
+    }
+    canvas#radarScan {
+      position: absolute; inset: 0; border-radius: 50%;
     }
 
-    /* ========== 主容器 ========== */
+    /* ========== 主容器 (3D 升级) ========== */
     .container {
       max-width: 880px;
-      margin: 60px auto;
-      padding: 30px;
-      border: 1px solid var(--green);
-      box-shadow: 0 0 30px rgba(0,255,122,0.15);
+      margin: 80px auto;
+      padding: 40px;
       position: relative;
       z-index: 2;
-      animation: flicker 6s infinite;
-      background: rgba(10,15,12,0.7);
-      backdrop-filter: blur(2px);
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out; /* 平滑跟随 */
     }
-    .corner { position: absolute; width: 12px; height: 12px; border: 2px solid var(--green); }
-    .corner.tl { top: -6px; left: -6px; border-right: none; border-bottom: none; }
-    .corner.tr { top: -6px; right: -6px; border-left: none; border-bottom: none; }
-    .corner.bl { bottom: -6px; left: -6px; border-right: none; border-top: none; }
-    .corner.br { bottom: -6px; right: -6px; border-left: none; border-top: none; }
+
+    /* 流光边框效果 */
+    .container::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: conic-gradient(from 0deg, transparent 0%, var(--green) 20%, transparent 40%, var(--cyan) 60%, transparent 80%);
+      border-radius: 4px;
+      z-index: -2;
+      animation: rotateBorder 4s linear infinite;
+      filter: blur(4px);
+    }
+    .container::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
+      border-radius: 2px;
+      z-index: -1;
+      border: 1px solid rgba(0,255,122,0.3);
+      box-shadow: 0 0 40px rgba(0,255,122,0.1);
+    }
+
+    /* 角落装饰 */
+    .corner { position: absolute; width: 15px; height: 15px; border: 2px solid var(--green); transition: all 0.3s; z-index: 10; }
+    .corner.tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+    .corner.tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+    .corner.bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+    .corner.br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+    /* 内部内容反向旋转，保持文字直立（高级3D技巧，此处为了效果暂不反向，营造倾斜感） */
 
     /* ========== 文字特效 ========== */
     h1 {
-      font-size: 1.4rem;
-      color: rgba(0,255,122,0.7);
+      font-size: 1.2rem;
+      color: rgba(0,255,122,0.6);
       margin-bottom: 20px;
-      text-shadow: 0 0 6px var(--green);
-    }
-    .domain {
-      font-size: 3.6rem;
-      font-weight: bold;
-      text-shadow: 0 0 20px var(--green);
-      position: relative;
-      animation: glitch 5s infinite;
+      text-shadow: 0 0 5px var(--green);
       letter-spacing: 2px;
     }
-    .domain::before,
-    .domain::after {
-      content: "peerup.cn";
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      opacity: 0.8;
+    .domain {
+      font-size: 4rem;
+      font-weight: 900;
+      color: #fff;
+      position: relative;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px var(--green), 0 0 20px var(--green);
+      margin: 10px 0 30px 0;
+      min-height: 1.2em;
     }
-    .domain::before { color: var(--glitch); clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%); transform: translate(-2px, -2px); }
-    .domain::after { color: var(--cyan); clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%); transform: translate(2px, 2px); }
-
-    .cursor {
-      display: inline-block;
-      width: 10px; height: 1.1em;
-      background: var(--green);
-      animation: blink 1s steps(2) infinite;
-      vertical-align: bottom;
-      margin-left: 4px;
-    }
-
+    
     .info {
-      background: rgba(0,255,122,0.05);
+      background: rgba(0,255,122,0.03);
       border-left: 3px solid var(--green);
-      padding: 16px 20px;
+      padding: 20px 25px;
       line-height: 1.8;
       margin: 30px 0;
       font-size: 0.95rem;
+      backdrop-filter: blur(5px);
+      box-shadow: inset 0 0 20px rgba(0,255,122,0.05);
     }
+    
     .disclaimer {
-      background: rgba(255,200,0,0.08);
-      border: 1px solid rgba(255,200,0,0.3);
-      padding: 14px 18px;
+      background: rgba(255, 64, 64, 0.05);
+      border: 1px solid rgba(255, 64, 64, 0.3);
+      padding: 15px 20px;
       font-size: 0.85rem;
-      color: #ffd966;
+      color: #ff6b6b;
       margin-top: 30px;
+      position: relative;
+      overflow: hidden;
     }
-    footer {
-      text-align: center;
-      margin-top: 40px;
-      font-size: 0.8rem;
-      color: #4caf7a;
+    .disclaimer::before {
+      content: "WARNING"; position: absolute; right: 10px; top: 5px;
+      font-size: 2rem; opacity: 0.1; font-weight: bold; pointer-events: none;
     }
 
     /* ========== 入侵进度条 ========== */
     .hack-box {
-      margin: 24px 0;
-      padding: 14px 16px;
+      margin: 30px 0;
+      padding: 15px 20px;
       border: 1px solid rgba(0,255,122,0.3);
-      background: rgba(0,255,122,0.03);
+      background: rgba(0,0,0,0.4);
       position: relative;
+      overflow: hidden;
     }
     .hack-label {
       display: flex;
       justify-content: space-between;
       font-size: 0.8rem;
-      color: rgba(0,255,122,0.8);
-      margin-bottom: 8px;
+      color: var(--cyan);
+      margin-bottom: 10px;
+      text-shadow: 0 0 5px var(--cyan);
     }
     .hack-bar {
       width: 100%;
-      height: 14px;
-      border: 1px solid rgba(0,255,122,0.4);
-      background: rgba(0,0,0,0.4);
+      height: 12px;
+      background: rgba(20,20,20,0.8);
       position: relative;
-      overflow: hidden;
+      transform: skewX(-20deg);
+      border: 1px solid #333;
     }
     .hack-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--green), var(--cyan));
-      box-shadow: 0 0 10px var(--green);
-      transition: width 0.3s ease;
+      background: repeating-linear-gradient(
+        45deg,
+        var(--green),
+        var(--green) 10px,
+        var(--cyan) 10px,
+        var(--cyan) 20px
+      );
+      box-shadow: 0 0 15px var(--green);
+      transition: width 0.2s cubic-bezier(0.1, 0.7, 1.0, 0.1);
       position: relative;
     }
-    .hack-fill::after {
-      content: "";
-      position: absolute;
-      top: 0; right: 0;
-      width: 30px; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
-      animation: shimmer 1.5s infinite;
-    }
     .hack-log {
-      margin-top: 10px;
-      font-size: 0.72rem;
-      color: rgba(0,255,122,0.5);
-      min-height: 1.2em;
-      font-family: "JetBrains Mono", monospace;
+      margin-top: 12px;
+      font-size: 0.75rem;
+      color: var(--green);
+      font-family: "Courier New", monospace;
+      height: 1.5em;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    /* ========== 音频可视化模拟 ========== */
+    .audio-viz {
+      display: flex;
+      gap: 3px;
+      height: 30px;
+      align-items: flex-end;
+      margin-top: 40px;
+      justify-content: center;
+      opacity: 0.6;
+    }
+    .bar {
+      width: 4px;
+      background: var(--cyan);
+      animation: bounce 0.5s infinite ease-in-out alternate;
+      box-shadow: 0 0 5px var(--cyan);
+    }
+    @keyframes bounce {
+      0% { height: 5px; opacity: 0.3; }
+      100% { height: 25px; opacity: 1; }
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.75rem;
+      color: rgba(0,255,122,0.4);
     }
 
     /* ========== 动画 ========== */
     @keyframes scan { from { background-position: 0 0; } to { background-position: 0 100%; } }
-    @keyframes blink { 0%,50%{opacity:1}51%,100%{opacity:0} }
-    @keyframes glitch {
-      0%,95% { transform: translate(0); filter: hue-rotate(0); }
-      96% { transform: translate(-3px, 1px); filter: hue-rotate(90deg); }
-      97% { transform: translate(2px, -1px); }
-      98% { transform: translate(-1px, 2px); }
-      99% { transform: translate(1px, -2px); }
-      100% { transform: translate(0); }
+    @keyframes rotateBorder { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes jitter {
+      0% { transform: translate(1px, 1px); }
+      50% { transform: translate(-1px, -1px); }
+      100% { transform: translate(0, 0); }
     }
-    @keyframes radar { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @keyframes flicker {
-      0%,100% { opacity: 1; }
-      98% { opacity: 0.98; }
-      99% { opacity: 0.93; }
+    .glitch-active {
+      animation: jitter 0.2s infinite;
+      color: var(--cyan);
     }
-    @keyframes shimmer { 0%{transform:translateX(-30px)}100%{transform:translateX(30px)} }
   </style>
 </head>
 <body>
 <canvas id="matrix"></canvas>
+<div class="grid-floor"></div>
 <canvas id="particles"></canvas>
 <div class="scanline"></div>
 <div class="crt"></div>
-<div class="radar"></div>
 
-<div class="container">
+<div class="radar">
+  <div class="radar-grid"></div>
+  <canvas id="radarScan"></canvas>
+</div>
+
+<div class="container" id="tiltCard">
   <div class="corner tl"></div>
   <div class="corner tr"></div>
   <div class="corner bl"></div>
@@ -238,123 +301,221 @@
   </div>
 
   <div class="info">
-    <p>> 状态：<span style="color:#7fffb0;">正常可转移</span></p>
+    <p>> 状态：<span style="color:#fff; text-shadow:0 0 5px #fff;">正常可转移</span></p>
     <p>> 后缀：.cn 中国顶级域名</p>
-    <p>> 特征：简短易记，品牌关联性强</p>
-    <p>> 交易：通过阿里云严选一键交易</p>
+    <p> > 特征：高价值资产，品牌关联性强</p>
+    <p>> 交易：阿里云严选一键交割</p>
   </div>
 
   <div class="disclaimer">
-    <strong>免责声明：</strong>本页面仅为域名信息展示。所有交易请通过阿里云严选域名交易平台进行，保障双方权益。
+    <strong>免责声明：</strong> 本页面仅为域名信息展示。所有交易请通过阿里云严选域名交易平台进行，保障双方权益。
+  </div>
+  
+  <!-- 模拟音频可视化 -->
+  <div class="audio-viz" id="audioViz">
+    <!-- JS 生成条 -->
   </div>
 
   <footer>
-    © 2026 peerup.cn :: SECURE TERMINAL
+    © 2026 peerup.cn :: SECURE TERMINAL :: ID: 8X-992
   </footer>
 </div>
 
 <script>
-/* ========== 矩阵雨 ========== */
+/* ========== 1. 矩阵雨 (增强版) ========== */
 const mc = document.getElementById("matrix");
 const mctx = mc.getContext("2d");
 mc.width = window.innerWidth;
 mc.height = window.innerHeight;
-const chars = "01PEERUPCN$#";
+const chars = "01PEERUPCN$#@&%";
 const fontSize = 14;
 const cols = Math.floor(mc.width / fontSize);
 const drops = Array(cols).fill(1);
+
 function drawMatrix() {
-  mctx.fillStyle = "rgba(10,15,12,0.05)";
+  // 稍微加深背景，制造拖尾效果，而不是完全清除
+  mctx.fillStyle = "rgba(5, 5, 5, 0.05)";
   mctx.fillRect(0, 0, mc.width, mc.height);
-  mctx.fillStyle = "#00ff7a";
+  
+  mctx.fillStyle = "#0f0"; // 基础绿色
   mctx.font = fontSize + "px monospace";
+  
   for (let i = 0; i < drops.length; i++) {
+    // 随机亮度，制造闪烁感
+    const brightness = Math.random() > 0.9 ? "#fff" : (Math.random() > 0.8 ? "#00ff7a" : "#003b00");
+    mctx.fillStyle = brightness;
+    
     const text = chars[Math.floor(Math.random() * chars.length)];
     mctx.fillText(text, i * fontSize, drops[i] * fontSize);
-    if (drops[i] * fontSize > mc.height && Math.random() > 0.975) drops[i] = 0;
+    
+    // 随机重置
+    if (drops[i] * fontSize > mc.height && Math.random() > 0.975) {
+      drops[i] = 0;
+    }
     drops[i]++;
   }
 }
-setInterval(drawMatrix, 35);
-window.onresize = () => {
-  mc.width = window.innerWidth;
-  mc.height = window.innerHeight;
-};
+setInterval(drawMatrix, 33);
 
-/* ========== 打字机 ========== */
-const domain = document.getElementById("domain");
-const text = domain.textContent;
-domain.textContent = "";
-let ti = 0;
-function typeDomain() {
-  if (ti < text.length) {
-    domain.textContent += text.charAt(ti++);
-    setTimeout(typeDomain, 120);
-  } else {
-    domain.innerHTML += '<span class="cursor"></span>';
-    startHack();
+/* ========== 2. 黑客解码文字特效 ========== */
+const domainEl = document.getElementById("domain");
+const targetText = "peerup.cn";
+const randomChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%&";
+let iteration = 0;
+
+function animateText() {
+  domainEl.innerText = targetText
+    .split("")
+    .map((letter, index) => {
+      if (index < iteration) return targetText[index];
+      return randomChars[Math.floor(Math.random() * randomChars.length)];
+    })
+    .join("");
+  
+  if (iteration >= targetText.length) {
+    // 完成后增加光标闪烁
+    domainEl.innerHTML += '<span class="cursor"></span>';
+    // 偶尔随机故障一下
+    setInterval(() => {
+      if(Math.random() > 0.9) domainEl.style.textShadow = `2px 0 var(--glitch), -2px 0 var(--cyan)`;
+      else domainEl.style.textShadow = `0 0 10px var(--green), 0 0 20px var(--green)`;
+    }, 100);
+    return;
   }
+  
+  iteration += 1/3; // 解码速度
+  setTimeout(animateText, 30);
 }
-setTimeout(typeDomain, 800);
+setTimeout(animateText, 500);
 
-/* ========== 入侵进度条模拟 ========== */
-const fill = document.getElementById("hack-fill");
-const pct = document.getElementById("hack-pct");
-const log = document.getElementById("hack-log");
-const logs = [
-  "正在探测目标节点...",
-  "建立加密隧道...",
-  "绕过防火墙规则 #1...",
-  "解析 DNS 记录...",
-  "验证域名所有权...",
-  "读取 WHOIS 信息...",
-  "注入会话令牌...",
-  "同步阿里云交易通道...",
-  "校验转移状态码...",
-  "生成安全凭证...",
-  "清理临时会话...",
-  "入侵模拟完成 :: 系统安全"
-];
-let hackStep = 0;
-function startHack() {
-  const tick = setInterval(() => {
-    if (hackStep >= logs.length) { clearInterval(tick); return; }
-    const p = Math.round(((hackStep + 1) / logs.length) * 100);
-    fill.style.width = p + "%";
-    pct.textContent = p + "%";
-    log.textContent = "> " + logs[hackStep];
-    hackStep++;
-  }, 700);
+/* ========== 3. 雷达 Canvas 绘制 ========== */
+const rCanvas = document.getElementById("radarScan");
+const rCtx = rCanvas.getContext("2d");
+const rSize = 100;
+rCanvas.width = rSize;
+rCanvas.height = rSize;
+const rCenter = rSize / 2;
+const radius = rSize / 2;
+let angle = 0;
+const targets = []; // 存储随机目标 {x, y, life}
+
+function drawRadar() {
+  rCtx.clearRect(0, 0, rSize, rSize);
+  
+  // 绘制扫描扇区
+  rCtx.beginPath();
+  rCtx.moveTo(rCenter, rCenter);
+  rCtx.arc(rCenter, rCenter, radius, angle, angle + 0.5);
+  rCtx.fillStyle = "rgba(0, 255, 122, 0.1)";
+  rCtx.fill();
+  
+  // 绘制扫描线
+  rCtx.beginPath();
+  rCtx.moveTo(rCenter, rCenter);
+  const lx = rCenter + Math.cos(angle) * radius;
+  const ly = rCenter + Math.sin(angle) * radius;
+  rCtx.lineTo(lx, ly);
+  rCtx.strokeStyle = "#00ff7a";
+  rCtx.lineWidth = 2;
+  rCtx.stroke();
+  
+  angle += 0.05;
+  if (angle > Math.PI * 2) angle = 0;
+  
+  // 随机生成目标
+  if (Math.random() > 0.98) {
+    targets.push({
+      x: Math.random() * rSize,
+      y: Math.random() * rSize,
+      life: 1.0,
+      detected: false
+    });
+  }
+  
+  // 绘制目标点
+  for (let i = targets.length - 1; i >= 0; i--) {
+    const t = targets[i];
+    
+    // 计算目标点到中心的角度
+    const dx = t.x - rCenter;
+    const dy = t.y - rCenter;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist > radius - 2) {
+       targets.splice(i, 1); // 超出圆圈移除
+       continue;
+    }
+    
+    let targetAngle = Math.atan2(dy, dx);
+    if (targetAngle < 0) targetAngle += Math.PI * 2;
+    
+    // 检测扫描线是否经过
+    let diff = Math.abs(targetAngle - angle);
+    if (diff < 0.1 || Math.abs(diff - Math.PI*2) < 0.1) {
+      t.detected = true;
+    }
+    
+    if (t.detected) {
+      t.life -= 0.02;
+      rCtx.beginPath();
+      rCtx.arc(t.x, t.y, 2, 0, Math.PI * 2);
+      rCtx.fillStyle = `rgba(255, 0, 64, ${t.life})`; // 红色威胁点
+      rCtx.fill();
+      
+      // 扩散圈
+      rCtx.beginPath();
+      rCtx.arc(t.x, t.y, (1.0 - t.life) * 10, 0, Math.PI * 2);
+      rCtx.strokeStyle = `rgba(255, 0, 64, ${t.life * 0.5})`;
+      rCtx.stroke();
+    } else {
+      // 未检测到的暗点
+      rCtx.beginPath();
+      rCtx.arc(t.x, t.y, 1, 0, Math.PI * 2);
+      rCtx.fillStyle = "rgba(0, 255, 122, 0.1)";
+      rCtx.fill();
+    }
+    
+    if (t.life <= 0) targets.splice(i, 1);
+  }
+  
+  requestAnimationFrame(drawRadar);
 }
+drawRadar();
 
-/* ========== 鼠标粒子拖尾 ========== */
+/* ========== 4. 鼠标粒子 (优化) ========== */
 const pc = document.getElementById("particles");
 const pctx = pc.getContext("2d");
 pc.width = window.innerWidth;
 pc.height = window.innerHeight;
 const particles = [];
 let mx = -100, my = -100;
+
 document.addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; });
 document.addEventListener("mouseleave", () => { mx = -100; my = -100; });
-window.onresize = () => {
-  pc.width = window.innerWidth;
-  pc.height = window.innerHeight;
-};
+
 function spawnParticle() {
   if (mx > 0 && my > 0) {
-    particles.push({
-      x: mx + (Math.random() - 0.5) * 6,
-      y: my + (Math.random() - 0.5) * 6,
-      vx: (Math.random() - 0.5) * 0.6,
-      vy: (Math.random() - 0.5) * 0.6 - 0.3,
-      life: 1,
-      r: Math.random() * 2 + 1,
-      c: Math.random() > 0.5 ? "#00ff7a" : "#00e0ff"
-    });
+    // 增加粒子数量，制造拖尾感
+    for(let i=0; i<2; i++) {
+        particles.push({
+          x: mx + (Math.random() - 0.5) * 10,
+          y: my + (Math.random() - 0.5) * 10,
+          vx: (Math.random() - 0.5) * 2,
+          vy: (Math.random() - 0.5) * 2,
+          life: 1.0,
+          r: Math.random() * 1.5 + 0.5,
+          c: Math.random() > 0.5 ? "#00ff7a" : "#00e0ff"
+        });
+    }
   }
 }
 function drawParticles() {
   pctx.clearRect(0, 0, pc.width, pc.height);
+  // 稍微保留一点拖尾，不用完全 clearRect，也可以用 fillRect 带透明度
+  pctx.fillStyle = "rgba(5, 5, 5, 0.2)"; 
+  pctx.globalCompositeOperation = "destination-out"; // 擦除效果
+  pctx.fillRect(0,0,pc.width, pc.height);
+  pctx.globalCompositeOperation = "source-over"; // 恢复正常绘制
+
   spawnParticle();
   for (let i = particles.length - 1; i >= 0; i--) {
     const p = particles[i];
@@ -367,11 +528,90 @@ function drawParticles() {
     pctx.fillStyle = p.c;
     pctx.globalAlpha = p.life;
     pctx.fill();
-    pctx.globalAlpha = 1;
   }
   requestAnimationFrame(drawParticles);
 }
 drawParticles();
+
+/* ========== 5. 3D 视差倾斜效果 ========== */
+const container = document.getElementById("tiltCard");
+document.addEventListener("mousemove", (e) => {
+  const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+  const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+  container.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+});
+// 鼠标移出复位
+document.addEventListener("mouseleave", () => {
+  container.style.transform = `rotateY(0deg) rotateX(0deg)`;
+});
+
+/* ========== 6. 入侵进度条模拟 (更激烈) ========== */
+const fill = document.getElementById("hack-fill");
+const pct = document.getElementById("hack-pct");
+const log = document.getElementById("hack-log");
+const logs = [
+  "初始化握手协议...",
+  "绕过主防火墙 [SUCCESS]",
+  "注入 SQL 负载...",
+  "正在破解 root 密码...",
+  "下载 /etc/shadow...",
+  "中间人攻击启动...",
+  "ARP 欺骗成功...",
+  "连接阿里云后端接口...",
+  "验证 SSL 证书链...",
+  "正在转移加密资产...",
+  "正在清除系统日志...",
+  "警告：检测到入侵尝试！",
+  "正在回滚操作...",
+  "模拟结束：安全环境"
+];
+let hackStep = 0;
+
+// 生成随机Hex字符串
+const randomHex = () => "0x" + Math.floor(Math.random()*16777215).toString(16).toUpperCase();
+
+setTimeout(() => {
+    const tick = setInterval(() => {
+        if (hackStep >= logs.length) { clearInterval(tick); return; }
+        
+        // 进度
+        const p = Math.round(((hackStep + 1) / logs.length) * 100);
+        fill.style.width = p + "%";
+        pct.textContent = p + "%";
+        
+        // 日志闪烁效果
+        log.innerHTML = `> ${logs[hackStep]} [${randomHex()}]`;
+        log.style.color = hackStep === 11 ? "red" : "var(--green)";
+        
+        // 偶尔触发容器故障抖动
+        if (hackStep > 5 && hackStep < 10 && Math.random() > 0.7) {
+            document.body.classList.add('glitch-active');
+            setTimeout(() => document.body.classList.remove('glitch-active'), 100);
+        }
+        
+        hackStep++;
+    }, 600); // 稍微加快一点速度
+}, 2000);
+
+/* ========== 7. 生成音频可视化条 ========== */
+const audioContainer = document.getElementById("audioViz");
+for(let i=0; i<20; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'bar';
+    // 随机动画时长和延迟
+    bar.style.animationDuration = (0.3 + Math.random() * 0.5) + 's';
+    bar.style.animationDelay = Math.random() + 's';
+    bar.style.height = (5 + Math.random() * 20) + 'px';
+    audioContainer.appendChild(bar);
+}
+
+// 窗口大小调整适配
+window.onresize = () => {
+  mc.width = window.innerWidth;
+  mc.height = window.innerHeight;
+  pc.width = window.innerWidth;
+  pc.height = window.innerHeight;
+};
 </script>
 </body>
 </html>
