@@ -128,8 +128,6 @@
     .corner.bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
     .corner.br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
 
-    /* 内部内容反向旋转，保持文字直立（高级3D技巧，此处为了效果暂不反向，营造倾斜感） */
-
     /* ========== 文字特效 ========== */
     h1 {
       font-size: 1.2rem;
@@ -171,12 +169,12 @@
       overflow: hidden;
     }
     .disclaimer::before {
-      content: "WARNING"; position: absolute; right: 10px; top: 5px;
+      content: "NOTICE"; position: absolute; right: 10px; top: 5px;
       font-size: 2rem; opacity: 0.1; font-weight: bold; pointer-events: none;
     }
 
-    /* ========== 入侵进度条 ========== */
-    .hack-box {
+    /* ========== 系统自检进度条 ========== */
+    .diag-box {
       margin: 30px 0;
       padding: 15px 20px;
       border: 1px solid rgba(0,255,122,0.3);
@@ -184,7 +182,7 @@
       position: relative;
       overflow: hidden;
     }
-    .hack-label {
+    .diag-label {
       display: flex;
       justify-content: space-between;
       font-size: 0.8rem;
@@ -192,7 +190,7 @@
       margin-bottom: 10px;
       text-shadow: 0 0 5px var(--cyan);
     }
-    .hack-bar {
+    .diag-bar {
       width: 100%;
       height: 12px;
       background: rgba(20,20,20,0.8);
@@ -200,7 +198,7 @@
       transform: skewX(-20deg);
       border: 1px solid #333;
     }
-    .hack-fill {
+    .diag-fill {
       height: 100%;
       width: 0%;
       background: repeating-linear-gradient(
@@ -214,7 +212,7 @@
       transition: width 0.2s cubic-bezier(0.1, 0.7, 1.0, 0.1);
       position: relative;
     }
-    .hack-log {
+    .diag-log {
       margin-top: 12px;
       font-size: 0.75rem;
       color: var(--green);
@@ -288,16 +286,16 @@
   <h1>// SYSTEM ONLINE :: DOMAIN INTERFACE</h1>
   <div class="domain" id="domain">peerup.cn</div>
 
-  <!-- 入侵进度条 -->
-  <div class="hack-box">
-    <div class="hack-label">
-      <span>[ INTRUSION_SIMULATION // 系统入侵模拟 ]</span>
-      <span id="hack-pct">0%</span>
+  <!-- 系统自检进度条 -->
+  <div class="diag-box">
+    <div class="diag-label">
+      <span>[ SYSTEM_DIAGNOSTIC // 系统环境自检 ]</span>
+      <span id="diag-pct">0%</span>
     </div>
-    <div class="hack-bar">
-      <div class="hack-fill" id="hack-fill"></div>
+    <div class="diag-bar">
+      <div class="diag-fill" id="diag-fill"></div>
     </div>
-    <div class="hack-log" id="hack-log">等待初始化...</div>
+    <div class="diag-log" id="diag-log">等待初始化...</div>
   </div>
 
   <div class="info">
@@ -397,7 +395,7 @@ rCanvas.height = rSize;
 const rCenter = rSize / 2;
 const radius = rSize / 2;
 let angle = 0;
-const targets = []; // 存储随机目标 {x, y, life}
+const targets = []; // 存储随机信号 {x, y, life}
 
 function drawRadar() {
   rCtx.clearRect(0, 0, rSize, rSize);
@@ -422,7 +420,7 @@ function drawRadar() {
   angle += 0.05;
   if (angle > Math.PI * 2) angle = 0;
   
-  // 随机生成目标
+  // 随机生成信号点
   if (Math.random() > 0.98) {
     targets.push({
       x: Math.random() * rSize,
@@ -432,11 +430,11 @@ function drawRadar() {
     });
   }
   
-  // 绘制目标点
+  // 绘制信号点
   for (let i = targets.length - 1; i >= 0; i--) {
     const t = targets[i];
     
-    // 计算目标点到中心的角度
+    // 计算信号点到中心的角度
     const dx = t.x - rCenter;
     const dy = t.y - rCenter;
     const dist = Math.sqrt(dx*dx + dy*dy);
@@ -458,7 +456,7 @@ function drawRadar() {
       t.life -= 0.02;
       rCtx.beginPath();
       rCtx.arc(t.x, t.y, 2, 0, Math.PI * 2);
-      rCtx.fillStyle = `rgba(255, 0, 64, ${t.life})`; // 红色威胁点
+      rCtx.fillStyle = `rgba(255, 0, 64, ${t.life})`; // 红色高亮信号点
       rCtx.fill();
       
       // 扩散圈
@@ -545,52 +543,50 @@ document.addEventListener("mouseleave", () => {
   container.style.transform = `rotateY(0deg) rotateX(0deg)`;
 });
 
-/* ========== 6. 入侵进度条模拟 (更激烈) ========== */
-const fill = document.getElementById("hack-fill");
-const pct = document.getElementById("hack-pct");
-const log = document.getElementById("hack-log");
+/* ========== 6. 系统自检进度条模拟 (合规修改后) ========== */
+const fill = document.getElementById("diag-fill");
+const pct = document.getElementById("diag-pct");
+const log = document.getElementById("diag-log");
+// 合规的系统自检日志
 const logs = [
-  "初始化握手协议...",
-  "绕过主防火墙 [SUCCESS]",
-  "注入 SQL 负载...",
-  "正在破解 root 密码...",
-  "下载 /etc/shadow...",
-  "中间人攻击启动...",
-  "ARP 欺骗成功...",
-  "连接阿里云后端接口...",
-  "验证 SSL 证书链...",
-  "正在转移加密资产...",
-  "正在清除系统日志...",
-  "警告：检测到入侵尝试！",
-  "正在回滚操作...",
-  "模拟结束：安全环境"
+  "初始化终端协议...",
+  "连接阿里云 DNS 节点 [OK]",
+  "校验 SSL 安全证书...",
+  "加载域名资产数据...",
+  "评估品牌商业价值... [98%]",
+  "同步交易行情数据...",
+  "渲染前端可视化组件...",
+  "建立安全加密通道 [OK]",
+  "提示：检测到多节点并发访问",
+  "系统就绪：安全环境"
 ];
-let hackStep = 0;
+let diagStep = 0;
 
 // 生成随机Hex字符串
 const randomHex = () => "0x" + Math.floor(Math.random()*16777215).toString(16).toUpperCase();
 
 setTimeout(() => {
     const tick = setInterval(() => {
-        if (hackStep >= logs.length) { clearInterval(tick); return; }
+        if (diagStep >= logs.length) { clearInterval(tick); return; }
         
         // 进度
-        const p = Math.round(((hackStep + 1) / logs.length) * 100);
+        const p = Math.round(((diagStep + 1) / logs.length) * 100);
         fill.style.width = p + "%";
         pct.textContent = p + "%";
         
         // 日志闪烁效果
-        log.innerHTML = `> ${logs[hackStep]} [${randomHex()}]`;
-        log.style.color = hackStep === 11 ? "red" : "var(--green)";
+        log.innerHTML = `> ${logs[diagStep]} [${randomHex()}]`;
+        // 检测到多节点并发访问 时显示红色警示，其余显示绿色
+        log.style.color = diagStep === 8 ? "var(--glitch)" : "var(--green)";
         
-        // 偶尔触发容器故障抖动
-        if (hackStep > 5 && hackStep < 10 && Math.random() > 0.7) {
+        // 偶尔触发容器故障抖动效果
+        if (diagStep === 8 && Math.random() > 0.7) {
             document.body.classList.add('glitch-active');
             setTimeout(() => document.body.classList.remove('glitch-active'), 100);
         }
         
-        hackStep++;
-    }, 600); // 稍微加快一点速度
+        diagStep++;
+    }, 600); // 速度
 }, 2000);
 
 /* ========== 7. 生成音频可视化条 ========== */
