@@ -169,7 +169,7 @@
         </div>
         
         <div class="disclaimer">
-            <strong>免责声明：</strong>本页面仅为域名信息展示，所有数据为模拟演示，仅供参考。所有交易请通过正规域名交易平台进行，保障双方权益。
+            <strong>免责声明：</strong>本页面仅为域名信息展示，仅供参考。所有交易请通过阿里云严选域名交易平台进行，保障双方权益。
         </div>
         
         <footer>
@@ -178,40 +178,31 @@
     </div>
 
     <script>
-        // 获取当前日期作为 Key，实现"每日清零"的今日访问统计
         const today = new Date();
-        const dateStr = today.toISOString().split('T')[0]; // 格式: 2026-08-21
+        const dateStr = today.toISOString().split('T')[0]; 
         const todayKey = `visits-${dateStr}`;
         const totalKey = 'visits-total';
 
-        // 从 localStorage 获取历史数据，如果没有则默认为 0
         let totalVisits = parseInt(localStorage.getItem(totalKey)) || 0;
         let todayVisits = parseInt(localStorage.getItem(todayKey)) || 0;
 
-        // 更新页面显示的函数
         function updateDisplay() {
             document.getElementById('totalVisits').textContent = totalVisits.toLocaleString();
             document.getElementById('todayVisits').textContent = todayVisits.toLocaleString();
         }
 
-        // 增加访问量的函数
         function addVisits() {
-            // 累计访问量和今日访问量均 +1
             todayVisits++;
             totalVisits++;
             
-            // 将最新数据保存回 localStorage
             localStorage.setItem(todayKey, todayVisits);
             localStorage.setItem(totalKey, totalVisits);
             
-            // 更新页面显示
             updateDisplay();
         }
 
-        // 页面加载时立即执行一次：刷新即 +1
         addVisits();
         
-        // 每10秒自动更新一次数据，让数字保持动态跳动效果
         setInterval(addVisits, 10000);
     </script>
 </body>
