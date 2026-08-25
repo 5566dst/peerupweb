@@ -5,132 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>peerup.cn 域名展示页</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Microsoft YaHei", Arial, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #fff;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        }
-        
-        header {
-            text-align: center;
-            padding-bottom: 25px;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 30px;
-        }
-        
-        h1 {
-            color: #2c3e50;
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-        
-        .domain-name {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #2980b9;
-            margin: 20px 0;
-            text-align: center;
-        }
-        
-        .stats-box {
-            display: flex;
-            justify-content: space-around;
-            margin: 30px 0;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .stat-card {
-            flex: 1;
-            min-width: 200px;
-            background-color: #f8fafc;
-            padding: 25px;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #1e293b;
-            margin: 10px 0;
-        }
-        
-        .stat-label {
-            color: #64748b;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-        
-        .live-indicator {
-            display: inline-flex;
-            align-items: center;
-            background-color: #fef3c7;
-            color: #92400e;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-        
-        .live-dot {
-            width: 8px;
-            height: 8px;
-            background-color: #f59e0b;
-            border-radius: 50%;
-            margin-right: 6px;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
-        }
-        
-        .info-section {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #f8fafc;
-            border-radius: 8px;
-            line-height: 1.7;
-        }
-        
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            color: #7f8c8d;
-            font-size: 0.9rem;
-        }
-        
-        .disclaimer {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #fffbeb;
-            border-radius: 6px;
-            color: #92400e;
-            font-size: 0.85rem;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Microsoft YaHei", Arial, sans-serif; }
+        body { background-color: #f5f7fa; color: #333; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background-color: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+        header { text-align: center; padding-bottom: 25px; border-bottom: 1px solid #eee; margin-bottom: 30px; }
+        h1 { color: #2c3e50; font-size: 2.2rem; margin-bottom: 10px; }
+        .domain-name { font-size: 3rem; font-weight: bold; color: #2980b9; margin: 20px 0; text-align: center; }
+        .stats-box { display: flex; justify-content: space-around; margin: 30px 0; gap: 20px; flex-wrap: wrap; }
+        .stat-card { flex: 1; min-width: 200px; background-color: #f8fafc; padding: 25px; border-radius: 10px; text-align: center; border: 1px solid #e2e8f0; }
+        .stat-value { font-size: 2.5rem; font-weight: bold; color: #1e293b; margin: 10px 0; }
+        .stat-label { color: #64748b; font-size: 1rem; font-weight: 600; }
+        .src-tag { display: inline-flex; align-items: center; margin-top: 12px; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .src-cloud { background: #ecfdf5; color: #047857; }
+        .src-local { background: #fef3c7; color: #92400e; }
+        .src-dot { width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; }
+        .dot-green { background: #10b981; }
+        .dot-yellow { background: #f59e0b; }
+        .live-indicator { display: inline-flex; align-items: center; background-color: #fef3c7; color: #92400e; padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 15px; }
+        .live-dot { width: 8px; height: 8px; background-color: #f59e0b; border-radius: 50%; margin-right: 6px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        .info-section { margin-top: 30px; padding: 20px; background-color: #f8fafc; border-radius: 8px; line-height: 1.7; }
+        footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; color: #7f8c8d; font-size: 0.9rem; }
+        .disclaimer { margin-top: 20px; padding: 15px; background-color: #fffbeb; border-radius: 6px; color: #92400e; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -139,27 +35,21 @@
             <h1>peerup.cn 域名展示</h1>
             <p>该域名正在寻求意向受让方，欢迎垂询</p>
         </header>
-        
         <div class="domain-name">peerup.cn</div>
-        
         <div class="stats-box">
             <div class="stat-card">
-                <div class="live-indicator">
-                    <span class="live-dot"></span> 实时更新
-                </div>
+                <div class="live-indicator"><span class="live-dot"></span> 实时更新</div>
                 <div class="stat-label">累计访问量</div>
-                <div class="stat-value" id="totalVisits">0</div>
+                <div class="stat-value" id="totalVisits">--</div>
+                <div class="src-tag" id="totalTag"></div>
             </div>
-            
             <div class="stat-card">
-                <div class="live-indicator">
-                    <span class="live-dot"></span> 实时更新
-                </div>
+                <div class="live-indicator"><span class="live-dot"></span> 实时更新</div>
                 <div class="stat-label">今日访问量</div>
-                <div class="stat-value" id="todayVisits">0</div>
+                <div class="stat-value" id="todayVisits">--</div>
+                <div class="src-tag" id="todayTag"></div>
             </div>
         </div>
-        
         <div class="info-section">
             <h3>域名信息</h3>
             <p>• 状态：正常可转移</p>
@@ -167,43 +57,74 @@
             <p>• 特点：简短易记，品牌关联性强</p>
             <p>• 交易：通过阿里云严选一键交易</p>
         </div>
-        
-        <div class="disclaimer">
-            <strong>免责声明：</strong>本页面仅为域名信息展示，仅供参考。所有交易请通过阿里云严选域名交易平台进行，保障双方权益。
-        </div>
-        
-        <footer>
-            <p>© 2026 peerup.cn 域名展示页</p>
-        </footer>
+        <div class="disclaimer"><strong>免责声明：</strong>本页面仅为域名信息展示，仅供参考。所有交易请通过阿里云严选域名交易平台进行，保障双方权益。</div>
+        <footer><p>© 2026 peerup.cn 域名展示页</p></footer>
     </div>
 
-    <script>
-        const today = new Date();
-        const dateStr = today.toISOString().split('T')[0]; 
-        const todayKey = `visits-${dateStr}`;
-        const totalKey = 'visits-total';
+<script>
+// ===== 配置：替换为你自己在 https://countapi.mileshilliard.com 创建的命名空间 key =====
+// 创建方法见下方注释。若服务不可用，自动降级为 localStorage 本地计数。
+const NAMESPACE = "peerup-cn";   // 可自定义，建议保持唯一
+const KEY_TOTAL  = "total-visits";
 
-        let totalVisits = parseInt(localStorage.getItem(totalKey)) || 0;
-        let todayVisits = parseInt(localStorage.getItem(todayKey)) || 0;
+const todayStr = new Date().toISOString().split('T')[0];
+const todayKey = `visits-${todayStr}`;
+const totalKey = 'visits-total';
 
-        function updateDisplay() {
-            document.getElementById('totalVisits').textContent = totalVisits.toLocaleString();
-            document.getElementById('todayVisits').textContent = todayVisits.toLocaleString();
-        }
+let totalVisits = parseInt(localStorage.getItem(totalKey)) || 0;
+let todayVisits = parseInt(localStorage.getItem(todayKey)) || 0;
+let cloudMode = false;
 
-        function addVisits() {
-            todayVisits++;
-            totalVisits++;
-            
-            localStorage.setItem(todayKey, todayVisits);
-            localStorage.setItem(totalKey, totalVisits);
-            
-            updateDisplay();
-        }
+function setTag(elId, dotCls, txt, tagCls) {
+    const el = document.getElementById(elId);
+    el.className = "src-tag " + tagCls;
+    el.innerHTML = `<span class="src-dot ${dotCls}"></span>${txt}`;
+}
 
-        addVisits();
-        
-        setInterval(addVisits, 10000);
-    </script>
+function updateDisplay() {
+    document.getElementById('totalVisits').textContent = totalVisits.toLocaleString();
+    document.getElementById('todayVisits').textContent = todayVisits.toLocaleString();
+}
+
+async function hitCountAPI() {
+    // countapi: GET 自增并返回当前值
+    const url = `https://countapi.mileshilliard.com/${encodeURIComponent(NAMESPACE)}/${encodeURIComponent(KEY_TOTAL)}`;
+    const res = await fetch(url, { method: "GET", cache: "no-store" });
+    if (!res.ok) throw new Error("countapi unavailable");
+    const data = await res.json();
+    // 不同实现返回字段可能为 value / count，兼容处理
+    const val = (data && (data.value !== undefined ? data.value : data.count)) || null;
+    if (val === null) throw new Error("bad response");
+    return parseInt(val);
+}
+
+async function initCloud() {
+    try {
+        const val = await hitCountAPI();
+        cloudMode = true;
+        totalVisits = val;
+        localStorage.setItem(totalKey, totalVisits);
+        setTag("totalTag", "dot-green", "云端跨设备 · countapi", "src-cloud");
+    } catch (e) {
+        cloudMode = false;
+        totalVisits = parseInt(localStorage.getItem(totalKey)) || 0;
+        setTag("totalTag", "dot-yellow", "云端不可用，仅本机计数", "src-local");
+    }
+}
+
+function addVisit() {
+    todayVisits++;
+    if (!cloudMode) totalVisits++;
+    localStorage.setItem(todayKey, todayVisits);
+    localStorage.setItem(totalKey, totalVisits);
+    updateDisplay();
+}
+
+// 今日标签始终按本地会话说明
+setTag("todayTag", "dot-yellow", "本机会话计数（按日）", "src-local");
+
+updateDisplay();
+initCloud().then(() => { addVisit(); });
+</script>
 </body>
 </html>
